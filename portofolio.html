@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheerful Portfolio</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Configure Tailwind -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Custom colors
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom styles -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      background-color: #18181b; /* zinc-900 */
+      color: #e4e4e7; /* zinc-200 */
+    }
+    
+    ::selection {
+      background-color: rgba(168, 85, 247, 0.3); /* purple-500/30 */
+      color: white;
+    }
+    
+    .bg-gradient-text {
+      background-image: linear-gradient(to right, #c084fc, #ec4899, #2dd4bf);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .bg-gradient-purple-pink {
+      background-image: linear-gradient(to right, #a855f7, #ec4899);
+    }
+    
+    .bg-gradient-purple-teal {
+      background-image: linear-gradient(to right, #a855f7, #2dd4bf);
+    }
+    
+    .bg-gradient-pink-teal {
+      background-image: linear-gradient(to right, #ec4899, #2dd4bf);
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+    
+    .nav-indicator {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, #a855f7, #ec4899);
+      border-radius: 9999px;
+      z-index: -10;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .nav-link.active .nav-indicator {
+      opacity: 1;
+    }
+    
+    .project-card:hover .project-image {
+      transform: scale(1.05);
+    }
+    
+    .project-card .project-image {
+      transition: transform 0.5s ease;
+    }
+    
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .fade-in.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .moving-blob {
+      transition: left 1s ease-out, top 1s ease-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+  <!-- Animated background elements -->
+  <div class="fixed inset-0 pointer-events-none">
+    <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-purple-500/10 blur-3xl"></div>
+    <div class="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-teal-500/10 blur-3xl"></div>
+    <div id="movingBlob" class="moving-blob absolute w-40 h-40 rounded-full bg-pink-500/10 blur-3xl"></div>
+  </div>
+
+  <!-- Playful navigation -->
+  <nav class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-zinc-800/80 backdrop-blur-md rounded-full px-2 py-1 border border-zinc-700/50">
+    <div class="flex items-center">
+      <a href="#home" class="nav-link relative px-4 py-2 rounded-full transition-all text-zinc-400 hover:text-white">
+        <div class="nav-indicator"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 inline-block mr-1"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"></path></svg>
+        Home
+      </a>
+      <a href="#projects" class="nav-link relative px-4 py-2 rounded-full transition-all text-zinc-400 hover:text-white">
+        <div class="nav-indicator"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 inline-block mr-1"><path d="M16 18l6-6-6-6"></path><path d="M8 6l-6 6 6 6"></path></svg>
+        Projects
+      </a>
+      <a href="#about" class="nav-link relative px-4 py-2 rounded-full transition-all text-zinc-400 hover:text-white">
+        <div class="nav-indicator"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 inline-block mr-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        About
+      </a>
+      <a href="#contact" class="nav-link relative px-4 py-2 rounded-full transition-all text-zinc-400 hover:text-white">
+        <div class="nav-indicator"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 inline-block mr-1"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Contact
+      </a>
+    </div>
+  </nav>
+
+  <!-- Mobile navigation -->
+  <nav class="fixed bottom-6 left-1/2 transform -translate-x-1/2 md:hidden z-50 bg-zinc-800/80 backdrop-blur-md rounded-full px-4 py-2 border border-zinc-700/50">
+    <div class="flex items-center justify-around gap-4">
+      <a href="#home" class="text-zinc-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"></path></svg>
+      </a>
+      <a href="#projects" class="text-zinc-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"></path><path d="M8 6l-6 6 6 6"></path></svg>
+      </a>
+      <a href="#about" class="text-zinc-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      <a href="#contact" class="text-zinc-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Vibrant hero section -->
+  <section id="home" class="min-h-screen flex items-center relative overflow-hidden">
+    <div class="container mx-auto px-4 md:px-8 relative z-10">
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        <div class="md:w-1/2 fade-in">
+          <div class="relative">
+            <div class="absolute -top-6 -left-6 text-5xl">
+              👋
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+              <span class="bg-gradient-text">Creative Developer</span>
+              <!-- <span class="block text-white mt-2">& Designer</span> -->
+            </h1>
+          </div>
+          <p class="text-zinc-300 max-w-md mb-8 text-lg">
+            Crafting delightful digital experiences with a splash of creativity and a dash of code magic. Let's
+            build something amazing together!
+          </p>
+          <div class="flex gap-4">
+            <a href="#projects" class="relative overflow-hidden group px-6 py-3 rounded-md bg-gradient-purple-pink text-white font-medium">
+              <span class="relative z-10 flex items-center">
+                View Projects
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </span>
+              <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></span>
+            </a>
+            <a href="#contact" class="px-6 py-3 rounded-md border border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/50 transition-colors text-white font-medium">
+              Contact Me
+            </a>
+          </div>
+        </div>
+        <div class="md:w-1/2 flex justify-center fade-in" style="transition-delay: 0.2s;">
+          <div class="relative">
+            <div class="absolute -inset-4 rounded-full bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-teal-500/20 blur-xl animate-pulse-slow"></div>
+            <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-zinc-800 animate-float">
+              <img
+                src="my.jpg"
+                alt="Portfolio Owner"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-zinc-800 rounded-full p-3 border-4 border-zinc-900">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="19" cy="5" r="3"></circle><circle cx="5" cy="12" r="3"></circle><circle cx="19" cy="19" r="3"></circle><line x1="6.7" y1="10.3" x2="17.3" y2="6.7"></line><line x1="6.7" y1="13.7" x2="17.3" y2="17.3"></line></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative elements -->
+    <div class="absolute bottom-10 left-10 w-20 h-20 border-4 border-purple-500/20 rounded-full"></div>
+    <div class="absolute top-20 right-20 w-32 h-32 border-4 border-teal-500/20 rounded-full"></div>
+  </section>
+
+  <!-- Creative projects section -->
+  <section id="projects" class="py-20 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900"></div>
+    <div class="container mx-auto px-4 md:px-8 relative z-10">
+      <!-- <div class="flex flex-col md:flex-row justify-between items-center mb-16">
+        <div class="fade-in">
+          <h2 class="text-3xl font-bold">
+            <span class="bg-gradient-text">Featured</span> Projects
+          </h2>
+          <p class="text-zinc-400 mt-2">Check out some of my recent work</p>
+        </div>
+        <div class="fade-in" style="transition-delay: 0.1s;">
+          <a href="#" class="px-4 py-2 rounded-md border border-zinc-700 hover:border-zinc-500 inline-flex items-center text-white">
+            View All
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </div>
+      </div> -->
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <!-- Project 1 - Large feature -->
+        <div class="md:col-span-8 relative group project-card fade-in" style="transition-delay: 0.2s;">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <img
+              src="backend-tiket.png"
+              alt="Project 1"
+              class="w-full h-auto object-cover project-image"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6">
+              <span class="inline-block px-3 py-1 bg-purple-500/20 backdrop-blur-sm text-purple-300 rounded-full text-xs font-medium mb-3">
+                WEB APPLICATION BACKEND
+              </span>
+              <h3 class="text-2xl font-bold text-white mb-2">Backend for ticket application</h3>
+              <p class="text-zinc-300 mb-4 max-w-md">
+                A web that monitoring the ticket application as an admin.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-2 py-1 bg-zinc-800/80 backdrop-blur-sm rounded-full text-xs">laravel</span>
+                <!-- <span class="px-2 py-1 bg-zinc-800/80 backdrop-blur-sm rounded-full text-xs">Three.js</span>
+                <span class="px-2 py-1 bg-zinc-800/80 backdrop-blur-sm rounded-full text-xs">Tailwind CSS</span> -->
+              </div>
+              <a href="https://github.com/Kal-el21/backend-ticket-wisata" class="px-4 py-2 bg-zinc-800/50 backdrop-blur-sm hover:bg-zinc-700/50 transition-colors rounded-md text-sm font-medium inline-flex items-center">
+                View Project
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 - Vertical card -->
+        <div class="md:col-span-4 relative group project-card fade-in" style="transition-delay: 0.3s;">
+          <div class="relative overflow-hidden rounded-xl h-full">
+            <div class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <img
+              src="tiket-aplikasi.png"
+              alt="Project 2"
+              class="w-full h-full object-cover project-image"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6">
+              <span class="inline-block px-3 py-1 bg-teal-500/20 backdrop-blur-sm text-teal-300 rounded-full text-xs font-medium mb-3">
+                MOBILE APP
+              </span>
+
+              <h3 class="text-xl font-bold text-white mb-2">Ticket</h3>
+              <p class="text-zinc-300 mb-4">An application to buy some ticket park</p>
+              <span class="px-2 py-1 bg-zinc-800/80 backdrop-blur-sm rounded-full text-xs">Flutter</span>
+              <a href="https://github.com/Kal-el21/app-tiket-wisata" class="px-4 py-2 bg-zinc-800/50 backdrop-blur-sm hover:bg-zinc-700/50 transition-colors rounded-md text-sm font-medium inline-flex items-center">
+                View Project
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3 - Horizontal card -->
+        <div class="md:col-span-6 relative group project-card fade-in" style="transition-delay: 0.4s;">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <img
+              src="simple.png"
+              alt="Project 3"
+              class="w-full h-auto object-cover project-image"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6">
+              <span class="inline-block px-3 py-1 bg-pink-500/20 backdrop-blur-sm text-pink-300 rounded-full text-xs font-medium mb-3">
+                WEB APPLICATION
+              </span>
+              <h3 class="text-xl font-bold text-white mb-2">Simple ToDolist</h3>
+              <p class="text-zinc-300 mb-4">This is my simple to do list project. im making this just for fun</p>
+              <a href="https://github.com/Kal-el21/simple-ToDoList" class="px-4 py-2 bg-zinc-800/50 backdrop-blur-sm hover:bg-zinc-700/50 transition-colors rounded-md text-sm font-medium inline-flex items-center">
+                View Project
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4 - Horizontal card -->
+        <div class="md:col-span-6 relative group project-card fade-in" style="transition-delay: 0.5s;">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <img
+              src="fp.png"
+              alt="Project 4"
+              class="w-full h-auto object-cover project-image"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6">
+              <span class="inline-block px-3 py-1 bg-purple-500/20 backdrop-blur-sm text-purple-300 rounded-full text-xs font-medium mb-3">
+                WEB APPLICATION
+              </span>
+              <h3 class="text-xl font-bold text-white mb-2">Final Project Todolist</h3>
+              <p class="text-zinc-300 mb-4">My final project when i'm in polytechnic IDN is this ToDoLis that for the database</p>
+              <a href="https://github.com/Kal-el21/fp-ToDoList-backend-new" class="px-4 py-2 bg-zinc-800/50 backdrop-blur-sm hover:bg-zinc-700/50 transition-colors rounded-md text-sm font-medium inline-flex items-center">
+                View Project
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Playful about section -->
+  <section id="about" class="py-20 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900"></div>
+    <div class="container mx-auto px-4 md:px-8 relative z-10">
+      <div class="max-w-3xl mx-auto text-center mb-16 fade-in">
+        <h2 class="text-3xl font-bold">
+          About <span class="bg-gradient-text">Me</span>
+        </h2>
+        <p class="text-zinc-400 mt-2">The story so far</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div class="md:col-span-5 md:col-start-2 fade-in" style="transition-delay: 0.1s;">
+          <div class="relative">
+            <div class="absolute -inset-4 rounded-xl bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-teal-500/10 blur-xl"></div>
+            <div class="relative bg-zinc-800/50 backdrop-blur-md border border-zinc-700/50 rounded-xl overflow-hidden">
+              <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Hello there! I'm</h3>
+                <p class="text-3xl font-bold bg-gradient-text mb-6">
+                  Haikhal baihaqi
+                </p>
+                <p class="text-zinc-300 mb-4">
+                  A passionate web developer with a love for creating delightful digital experiences. I
+                  blend creativity with technical expertise to build solutions that are both beautiful and
+                  functional.
+                </p>
+                <p class="text-zinc-300">
+                  When I'm not coding, you'll find me exploring some new projects, experimenting with another language,
+                  or enjoying a good cup of coffee while planning my next project.
+                </p>
+
+                <div class="mt-6 pt-6 border-t border-zinc-700/50">
+                  <h4 class="font-medium mb-3">Connect with me</h4>
+                  <div class="flex gap-4">
+                    <a
+                      href="https://github.com/Kal-el21"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="p-2 bg-zinc-700/50 hover:bg-zinc-700 rounded-full transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/in/haikhal-baihaqi-b47557316/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="p-2 bg-zinc-700/50 hover:bg-zinc-700 rounded-full transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                    <a
+                      href="haikalbaihaqi99@gmail.com"
+                      class="p-2 bg-zinc-700/50 hover:bg-zinc-700 rounded-full transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-5 fade-in" style="transition-delay: 0.2s;">
+          <div class="space-y-4">
+            <div class="bg-zinc-800/50 backdrop-blur-md border border-zinc-700/50 rounded-xl overflow-hidden hover:bg-zinc-800/80 transition-colors">
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="p-2 bg-purple-500/20 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"></path><path d="M8 6l-6 6 6 6"></path></svg>
+                  </div>
+                  <h3 class="font-bold">Skills</h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-3 py-1 bg-purple-500/10 text-purple-300 rounded-full text-xs">JavaScript</span>
+                  <span class="px-3 py-1 bg-teal-500/10 text-teal-300 rounded-full text-xs">Html</span>
+                  <span class="px-3 py-1 bg-pink-500/10 text-pink-300 rounded-full text-xs">Laravel</span>
+                  <span class="px-3 py-1 bg-purple-500/10 text-purple-300 rounded-full text-xs">Bootstrap</span>
+                  <span class="px-3 py-1 bg-teal-500/10 text-teal-300 rounded-full text-xs">Node.js</span>
+                  <!-- <span class="px-3 py-1 bg-pink-500/10 text-pink-300 rounded-full text-xs">UI/UX Design</span> -->
+                  <span class="px-3 py-1 bg-purple-500/10 text-purple-300 rounded-full text-xs">Tailwind CSS</span>
+                  <!-- <span class="px-3 py-1 bg-teal-500/10 text-teal-300 rounded-full text-xs">Figma</span> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-zinc-800/50 backdrop-blur-md border border-zinc-700/50 rounded-xl overflow-hidden hover:bg-zinc-800/80 transition-colors">
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="p-2 bg-teal-500/20 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </div>
+                  <h3 class="font-bold">Experience</h3>
+                </div>
+                <div class="space-y-4">
+                  <div>
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium text-white">Junior Developer</span>
+                      <span class="text-zinc-400 text-sm">2024 - Present</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm">Polytechnic IDN</p>
+                  </div>
+                  <!-- <div>
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium text-white">Web Developer</span>
+                      <span class="text-zinc-400 text-sm">2018 - 2021</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm">Digital Solutions Inc.</p>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-zinc-800/50 backdrop-blur-md border border-zinc-700/50 rounded-xl overflow-hidden hover:bg-zinc-800/80 transition-colors">
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="p-2 bg-pink-500/20 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="19" cy="5" r="3"></circle><circle cx="5" cy="12" r="3"></circle><circle cx="19" cy="19" r="3"></circle><line x1="6.7" y1="10.3" x2="17.3" y2="6.7"></line><line x1="6.7" y1="13.7" x2="17.3" y2="17.3"></line></svg>
+                  </div>
+                  <h3 class="font-bold">Education</h3>
+                </div>
+                <div class="space-y-4">
+                  <div>
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium text-white">Web developer</span>
+                      <span class="text-zinc-400 text-sm">2024</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm">Polytechnic IDN</p>
+                  </div>
+                  <div>
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium text-white">android developer</span>
+                      <span class="text-zinc-400 text-sm">2025</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm">Polytechnic IDN</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive contact section -->
+  <section id="contact" class="py-20 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900"></div>
+    <div class="container mx-auto px-4 md:px-8 relative z-10">
+      <div class="max-w-3xl mx-auto text-center mb-16 fade-in">
+        <h2 class="text-3xl font-bold">
+          Let's <span class="bg-gradient-text">Connect</span>
+        </h2>
+        <p class="text-zinc-400 mt-2">Have a project in mind? Let's make it happen!</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+        <div class="fade-in" style="transition-delay: 0.1s;">
+          <div class="bg-zinc-800/50 backdrop-blur-md border border-zinc-700/50 rounded-xl overflow-hidden h-full">
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-6">Get In Touch</h3>
+              <div class="space-y-6">
+                <div class="flex items-center gap-4">
+                  <div class="p-3 bg-purple-500/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  </div>
+                  <div>
+                    <p class="text-sm text-zinc-400">Email</p>
+                    <a
+                      href="mailto:haikalbaihaqi99@gmail.com"
+                      class="text-white hover:text-purple-300 transition-colors"
+                    >
+                      haikalbaihaqi99@gmail.com
+                    </a>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4">
+                  <div class="p-3 bg-teal-500/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                  </div>
+                  <div>
+                    <p class="text-sm text-zinc-400">GitHub</p>
+                    <a
+                      href="https://github.com/Kal-el21"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-white hover:text-teal-300 transition-colors"
+                    >
+                      https://github.com/Kal-el21
+                    </a>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4">
+                  <div class="p-3 bg-pink-500/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                  </div>
+                  <div>
+                    <p class="text-sm text-zinc-400">LinkedIn</p>
+                    <a
+                      href="https://www.linkedin.com/in/haikhal-baihaqi-b47557316/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-white hover:text-pink-300 transition-colors"
+                    >
+                      https://www.linkedin.com/in/haikhal-baihaqi-b47557316/
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 pt-8 border-t border-zinc-700/50">
+                <h4 class="font-medium mb-4">Current Availability</h4>
+                <div class="flex items-center gap-2">
+                  <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <p class="text-zinc-300">Available for new projects</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="fade-in" style="transition-delay: 0.2s;">
+          <div class="bg-zinc-800/50 backdrop-blur-md border border-zinc-700/50 rounded-xl overflow-hidden">
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-6">Send a Message</h3>
+              <form class="space-y-4">
+                <div>
+                  <label for="name" class="block text-sm font-medium mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    class="w-full px-4 py-3 bg-zinc-700/50 border border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="w-full px-4 py-3 bg-zinc-700/50 border border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+                <div>
+                  <label for="message" class="block text-sm font-medium mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="5"
+                    class="w-full px-4 py-3 bg-zinc-700/50 border border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                    placeholder="Tell me about your project..."
+                  ></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 px-4 bg-gradient-purple-pink hover:opacity-90 transition-opacity rounded-lg text-white font-medium">
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Playful footer -->
+  <footer class="py-8 bg-zinc-900 border-t border-zinc-800/50">
+    <div class="container mx-auto px-4 md:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center gap-2 mb-4 md:mb-0">
+          <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <span class="text-white font-bold">YN</span>
+          </div>
+          <p class="text-zinc-400 text-sm">© <span id="currentYear"></span> Haikhal baihaqi. All rights reserved.</p>
+        </div>
+        <div class="flex gap-6">
+          <a
+            href="https://github.com/Kal-el21"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-zinc-400 hover:text-white transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/haikhal-baihaqi-b47557316/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-zinc-400 hover:text-white transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          </a>
+          <a href="mailto:haikalbaihaqi99@gmail.com" class="text-zinc-400 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    
+    // Handle navigation highlighting
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+    
+    function setActiveNavLink() {
+      let currentSection = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        
+        if (window.scrollY >= (sectionTop - 100)) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+      
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+    
+    // Handle scroll animations
+    const fadeElements = document.querySelectorAll('.fade-in');
+    
+    function checkFadeElements() {
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementBottom = element.getBoundingClientRect().bottom;
+        
+        if (elementTop < window.innerHeight - 100 && elementBottom > 0) {
+          element.classList.add('appear');
+        }
+      });
+    }
+    
+    // Handle moving blob based on mouse position
+    const movingBlob = document.getElementById('movingBlob');
+    
+    function moveBlob(e) {
+      const x = e.clientX / 10;
+      const y = e.clientY / 10;
+      
+      movingBlob.style.left = `${x}px`;
+      movingBlob.style.top = `${y}px`;
+    }
+    
+    // Event listeners
+    window.addEventListener('scroll', setActiveNavLink);
+    window.addEventListener('scroll', checkFadeElements);
+    window.addEventListener('mousemove', moveBlob);
+    
+    // Initialize
+    setActiveNavLink();
+    checkFadeElements();
+  </script>
+</body>
+</html>
